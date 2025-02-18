@@ -1,55 +1,37 @@
-from MiniGoVisitor import MiniGoVisitor
-from MiniGoParser import MiniGoParser
-from AST import *
+# Generated from main/minigo/parser/MiniGo.g4 by ANTLR 4.9.2
+from antlr4 import *
+if __name__ is not None and "." in __name__:
+    from .MiniGoParser import MiniGoParser
+else:
+    from MiniGoParser import MiniGoParser
 
-class ASTGeneration(MiniGoVisitor):
-    # def visitProgram(self,ctx:MiniGoParser.ProgramContext):
-    #     return Program([self.visit(i) for i in ctx.decl()])
+# This class defines a complete generic visitor for a parse tree produced by MiniGoParser.
 
-    # def visitDecl(self,ctx:MiniGoParser.DeclContext):
-    #     return self.visit(ctx.getChild(0))
+class MiniGoVisitor(ParseTreeVisitor):
 
-    # def visitFuncdecl(self,ctx:MiniGoParser.FuncdeclContext):
-    #     return FuncDecl(ctx.ID().getText(),[],VoidType(),Block([]))
-    	
-    # def visitVardecl(self,ctx:MiniGoParser.VardeclContext):
-    #     return VarDecl(ctx.ID().getText(),IntType(),None)
-     # Visit a parse tree produced by MiniGoParser#program.
-     
-    def intconvert(self,num):
-        if 'x' or 'X' in num:
-            return int(num, 16)
-        elif 'o' or 'O' in num:
-            return int(num, 8)
-        elif 'b' or 'B' in num:
-            return int(num, 2)
-        return int(num) 
-        
+    # Visit a parse tree produced by MiniGoParser#program.
     def visitProgram(self, ctx:MiniGoParser.ProgramContext):
-        return Program([self.visit(ctx.decl())]+ self.visit(ctx.program_tail()))
+        return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by MiniGoParser#program_tail.
     def visitProgram_tail(self, ctx:MiniGoParser.Program_tailContext):
-        
-        # return [self.visit(ctx.decl)] + self.visit(ctx.program_tail) if ctx.getChildCount() > 0 else []
-        return [] if not  ctx.getChildCount() == 0 else [self.visit(ctx.decl())] + self.visit(ctx.program_tail())
+        return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by MiniGoParser#decl.
     def visitDecl(self, ctx:MiniGoParser.DeclContext):
-        return self.visit(ctx.vardecl()) if ctx.vardecl() else self.visit(ctx.funcdecl())
+        return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by MiniGoParser#vardecl.
     def visitVardecl(self, ctx:MiniGoParser.VardeclContext):
-        return self.visit(ctx.var()) if ctx.var() else self.visit(ctx.vararray())
+        return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by MiniGoParser#var.
     def visitVar(self, ctx:MiniGoParser.VarContext):
-        return VarDecl(ctx.ID().getText(), self.visit(ctx.alltype()) if ctx.alltype() else None, self.visit(ctx.expr()) if ctx.expr() else None)
-
+        return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by MiniGoParser#vararray.
@@ -64,7 +46,7 @@ class ASTGeneration(MiniGoVisitor):
 
     # Visit a parse tree produced by MiniGoParser#alltype.
     def visitAlltype(self, ctx:MiniGoParser.AlltypeContext):
-        return IntType() if ctx.INTTYPE() else FloatType() if ctx.FLOAT() else BoolType() if ctx.BOOLEAN() else StringType() if ctx.STRING() else VoidType() 
+        return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by MiniGoParser#list_id.
@@ -319,19 +301,7 @@ class ASTGeneration(MiniGoVisitor):
 
     # Visit a parse tree produced by MiniGoParser#literal.
     def visitLiteral(self, ctx:MiniGoParser.LiteralContext):
-        if ctx.INT():
-            return IntLiteral(self.intconvert(ctx.INT().getText()))
-        elif ctx.REAL():
-            return FloatLiteral(float(ctx.FLOAT().getText()))
-        elif ctx.BOOLITERAL():
-            return BooleanLiteral(ctx.BOOL().getText() == "true")
-        elif ctx.STRINGLIT():
-            return StringLiteral(ctx.STRING().getText())
-        elif ctx.array():
-            return self.visit(ctx.array())
-        elif ctx.struct_literal():
-            return self.visit(ctx.struct_literal())
-        return NilLiteral()
+        return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by MiniGoParser#literal_array.
@@ -373,5 +343,6 @@ class ASTGeneration(MiniGoVisitor):
     def visitStruct_param(self, ctx:MiniGoParser.Struct_paramContext):
         return self.visitChildren(ctx)
 
-    
 
+
+del MiniGoParser
