@@ -214,11 +214,6 @@ class MiniGoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MiniGoParser#postfix.
-    def visitPostfix(self, ctx:MiniGoParser.PostfixContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by MiniGoParser#factor_expr.
     def visitFactor_expr(self, ctx:MiniGoParser.Factor_exprContext):
         return self.visitChildren(ctx)

@@ -11,8 +11,8 @@ class ASTGenSuite(unittest.TestCase):
 
     def test_more_complex_program(self):
         """More complex program"""
-        input = """var x float ;"""
-        expect = str(Program([VarDecl("x",FloatType(),None)]))
+        input = """var x float = arr[2].p[2][2];"""
+        expect = str(Program([VarDecl("x",FloatType(),BinaryOp("||",Id("x"),Id("y")))]))
         self.assertTrue(TestAST.checkASTGen(input,expect,301))
     
     # def test_call_without_parameter(self):

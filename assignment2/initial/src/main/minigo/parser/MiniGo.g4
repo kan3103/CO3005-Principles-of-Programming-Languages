@@ -126,8 +126,8 @@ neg_expr: MINUS  neg_expr | NOT neg_expr | element_expr ;
 
 element_expr: method_element | array_element | access_struct | factor_expr;
 
-struct_expr: factor_expr | struct_expr postfix;
-postfix: access_field | method_op | index_op;
+struct_expr: factor_expr | struct_expr access_field | struct_expr method_op | struct_expr index_op;
+
 factor_expr: LB expr RB | literal | ID | funccall;
 
 access_struct: struct_expr access_field;
@@ -135,8 +135,8 @@ method_element: struct_expr method_op;
 array_element: struct_expr index_op;
 
 access_field: DOT ID;
-method_op: DOT funccall ;
-index_op: LS expr RS ;
+method_op: DOT ID LB expr_list RB | DOT ID LB RB ;
+index_op: LS expr RS | index_op LS expr RS;
 funccall: ID LB expr_list RB | ID LB RB;
 
 // TYPE
@@ -158,7 +158,7 @@ body_body_type: ID space_array_op alltype SEMI | body_body_type  ID space_array_
 
 // LITERAL
 
-literal:array | struct_literal | BOOLITERAL | INT | REAL | STRINGLIT |  ID  | NIL;
+literal:array | struct_literal | BOOLITERAL | INT | REAL | STRINGLIT |  NIL;
 
 literal_array: struct_literal| BOOLITERAL | INT | REAL | STRINGLIT | ID  | NIL | array_list;
 
